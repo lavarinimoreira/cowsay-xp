@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cowsay - Windows XP</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tahoma:wght@400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tahoma', sans-serif;
+            font-size: 11px;
+            /* background: linear-gradient(to bottom, #0c5f9a 0%, #386ba1 100%); */
+            background: url('wxp.jpg');
+            background-size: cover;
+            min-height: 100vh;
+            overflow-x: auto;
+        }
+
+        .desktop {
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 60px; /* Espaço para o rodapé */
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 0%, transparent 50%);
+        }
+
+        .window {
+            background: #ece9d8;
+            border: 2px outset #ece9d8;
+            border-radius: 0;
+            max-width: 800px;
+            margin: 50px auto;
+            box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .title-bar {
+            background: linear-gradient(to bottom, #0997ff 0%, #0053ee 100%);
+            color: white;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .title-text {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        .window-icon {
+            width: 16px;
+            height: 16px;
+            background: #ffff00;
+            border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 2px;
+        }
+
+        .control-btn {
+            width: 18px;
+            height: 16px;
+            background: linear-gradient(to bottom, #e8e5e0 0%, #c6c3bd 100%);
+            border: 1px outset #e8e5e0;
+            font-size: 8px;
+            cursor: pointer;
+        }
+
+        .control-btn:hover {
+            background: linear-gradient(to bottom, #f0ede8 0%, #cec7bd 100%);
+        }
+
+        .control-btn:active {
+            border: 1px inset #e8e5e0;
+        }
+
+        .menu-bar {
+            background: #ece9d8;
+            border-bottom: 1px solid #919b9c;
+            padding: 4px;
+        }
+
+        .menu-item {
+            display: inline-block;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .menu-item:hover {
+            background: #316ac5;
+            color: white;
+        }
+
+        .content {
+            padding: 20px;
+            background: #ece9d8;
+        }
+
+        .input-section {
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        textarea, select {
+            width: 100%;
+            padding: 4px;
+            border: 2px inset #ece9d8;
+            background: white;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            resize: vertical;
+        }
+
+        textarea {
+            min-height: 80px;
+        }
+
+        select {
+            width: 200px;
+        }
+
+        .btn {
+            background: linear-gradient(to bottom, #e8e5e0 0%, #c6c3bd 100%);
+            border: 2px outset #e8e5e0;
+            padding: 6px 16px;
+            font-family: 'Tahoma', sans-serif;
+            font-size: 11px;
+            cursor: pointer;
+            margin-right: 8px;
+        }
+
+        .btn:hover {
+            background: linear-gradient(to bottom, #f0ede8 0%, #cec7bd 100%);
+        }
+
+        .btn:active {
+            border: 2px inset #e8e5e0;
+        }
+
+        .output-section {
+            border: 2px inset #ece9d8;
+            background: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            padding: 15px;
+            min-height: 200px;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .status-bar {
+            background: #ece9d8;
+            border-top: 1px solid #919b9c;
+            padding: 4px 8px;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .status-panel {
+            border: 1px inset #ece9d8;
+            padding: 2px 6px;
+            background: #f1f0e7;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 8px;
+            text-align: center;
+            font-size: 11px;
+            z-index: 1000;
+        }
+
+        .footer a {
+            color: #0053ee;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer a:hover {
+            color: #0997ff;
+            text-decoration: underline;
+        }
+
+        .heart {
+            color: #ff0000;
+            font-weight: bold;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .cursor {
+            animation: blink 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop">
+        <div class="window">
+            <div class="title-bar">
+                <div class="title-text">
+                    <div class="window-icon">🐄</div>
+                    Cowsay Terminal v1.0
+                </div>
+                <div class="window-controls">
+                    <button class="control-btn">_</button>
+                    <button class="control-btn">□</button>
+                    <button class="control-btn">×</button>
+                </div>
+            </div>
+            
+            <div class="menu-bar">
+                <span class="menu-item">Arquivo</span>
+                <span class="menu-item">Editar</span>
+                <span class="menu-item">Animal</span>
+                <span class="menu-item">Ajuda</span>
+            </div>
+
+            <div class="content">
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="message">Digite sua mensagem:</label>
+                        <textarea id="message" placeholder="Digite aqui sua mensagem, selecione um dos animais e clique em Gerar"></textarea>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="animal">Escolha um animal:</label>
+                        <select id="animal">
+                            <option value="cow">🐄 Vaca</option>
+                            <option value="tux">🐧 Pinguim</option>
+                            <!-- <option value="elephant">🐘 Elefante</option> -->
+                            <option value="sheep">🐑 Ovelha</option>
+                            <option value="dragon">🐉 Dragão</option>
+                            <option value="cat">🐱 Gato</option>
+                            <!-- <option value="dog">🐶 Cachorro</option> -->
+                        </select>
+                    </div>
+                    
+                    <button class="btn" onclick="generateCowsay()">Gerar</button>
+                    <button class="btn" onclick="clearOutput()">Limpar</button>
+                    <button class="btn" onclick="copyToClipboard()">Copiar</button>
+                </div>
+
+                <div class="output-section" id="output">C:\COWSAY> Bem-vindo ao Cowsay Terminal!
+Digite uma mensagem e clique em "Gerar" para começar.
+
+<span class="cursor">_</span></div>
+            </div>
+
+            <div class="status-bar">
+                <div class="status-panel">Pronto</div>
+                <div class="status-panel" id="status">Aguardando entrada...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Feito com <span class="heart">♥</span> por <a href="https://github.com/lavarinimoreira" target="_blank">lavarinimoreira</a>
+    </div>
+
+    <script>
+        const animals = {
+            cow: {
+                body: [
+                    "        \\   ^__^",
+                    "         \\  (oo)\\_______",
+                    "            (__)\\       )\\/\\",
+                    "                ||----w |",
+                    "                ||     ||"
+                ]
+            },
+            tux: {
+                body: [
+                    "   \\",
+                    "    \\",
+                    "        .-.",
+                    "       |o_o |",
+                    "       |:_/ |",
+                    "      //   \\ \\",
+                    "     (|     | )",
+                    "    /'\\_   _/`\\",
+                    "    \\___)=(___/"
+                ]
+            },
+            elephant: {
+                body: [
+                    " \\     /\\  ___  /\\",
+                    "  \\   (  o   o  )",
+                    "     \\ \\  -  / /",
+                    "      /\\/\\   /\\/\\",
+                    "     /   /\\_/\\   \\",
+                    "    /  _/     \\_  \\",
+                    "   /__/         \\__\\"
+                ]
+            },
+            sheep: {
+                body: [
+                    "  \\",
+                    "   \\   __     ",
+                    "       UooU\\.'@@@@@@`.",
+                    "       \\__/(@@@@@@@@@@)",
+                    "            (@@@@@@@@)",
+                    "            `YY~~~~YY'",
+                    "             ||    ||"
+                ]
+            },
+            dragon: {
+                body: [
+                    "      \\                    / \\  //\\",
+                    "       \\    |\\___/|      /   \\//  \\\\",
+                    "            /0  0  \\__  /    //  | \\ \\    ",
+                    "           /     /  \\/_/    //   |  \\  \\  ",
+                    "           @_^_@'/   \\/_   //    |   \\   \\ ",
+                    "           //_^_/     \\/_ //     |    \\    \\",
+                    "        ( //) |        \\///      |     \\     \\",
+                    "      ( / /) _|_ /   )  //       |      \\     _\\",
+                    "    ( // /) '/,_ _ _/  ( ; -.    |    _ _\\.-~        .-~~~^-.",
+                    "  (( / / )) ,-{        _      `-.|.-~-.           .~         `.",
+                    " (( // / ))  '/\\      /                 ~-. _ .-~      .-~^-.  \\",
+                    " (( /// ))      `.   {            }                   /      \\  \\",
+                    "  (( / ))     .----~-.\\        \\-'                 .~         \\  `. \\^-.",
+                    "             ///.----..>        \\             _ -~             `.  ^-`  ^-_",
+                    "               ///-._ _ _ _ _ _ _}^ - - - - ~                     ~-- ,.-~",
+                    "                                                                  /.-~"
+                ]
+            },
+            cat: {
+                body: [
+                    "       \\",
+                    "        \\    /\\_/\\  ",
+                    "         \\  ( o.o ) ",
+                    "              > ^ <"
+                ]
+            },
+            dog: {
+                body: [
+                    "   \\",
+                    "    \\",
+                    "              __      _",
+                    "o            /  \\_   (_)",
+                    " \\_          \\__/ \\__/ |",
+                    "   \\__________/        |",
+                    "                    \\  |",
+                    "                     \\ |",
+                    "                      \\|",
+                    "                      U"
+                ]
+            }
+        };
+
+        function wrapText(text, width = 40) {
+            const words = text.split(' ');
+            const lines = [];
+            let currentLine = '';
+
+            for (const word of words) {
+                if ((currentLine + word).length > width) {
+                    if (currentLine) {
+                        lines.push(currentLine.trim());
+                        currentLine = word + ' ';
+                    } else {
+                        lines.push(word);
+                    }
+                } else {
+                    currentLine += word + ' ';
+                }
+            }
+            if (currentLine) {
+                lines.push(currentLine.trim());
+            }
+            return lines;
+        }
+
+        function createSpeechBubble(text) {
+            const lines = wrapText(text, 38);
+            const maxLength = Math.max(...lines.map(line => line.length));
+            
+            let bubble = '';
+            
+            // Top border
+            bubble += ' ' + '_'.repeat(maxLength + 2) + '\n';
+            
+            // Content
+            if (lines.length === 1) {
+                bubble += `< ${lines[0].padEnd(maxLength)} >\n`;
+            } else {
+                lines.forEach((line, index) => {
+                    if (index === 0) {
+                        bubble += `/ ${line.padEnd(maxLength)} \\\n`;
+                    } else if (index === lines.length - 1) {
+                        bubble += `\\ ${line.padEnd(maxLength)} /\n`;
+                    } else {
+                        bubble += `| ${line.padEnd(maxLength)} |\n`;
+                    }
+                });
+            }
+            
+            // Bottom border
+            bubble += ' ' + '-'.repeat(maxLength + 2) + '\n';
+            
+            return bubble;
+        }
+
+        function generateCowsay() {
+            const message = document.getElementById('message').value || 'Moo!';
+            const animalType = document.getElementById('animal').value;
+            const output = document.getElementById('output');
+            const status = document.getElementById('status');
+            
+            status.textContent = 'Gerando...';
+            
+            setTimeout(() => {
+                const speechBubble = createSpeechBubble(message);
+                const animalBody = animals[animalType].body.join('\n');
+                
+                const result = `C:\\COWSAY> cowsay "${message}"
+
+${speechBubble}${animalBody}
+
+C:\\COWSAY> <span class="cursor">_</span>`;
+                
+                output.innerHTML = result;
+                status.textContent = `Animal: ${animalType} | Caracteres: ${message.length}`;
+            }, 500);
+        }
+
+        function clearOutput() {
+            const output = document.getElementById('output');
+            const status = document.getElementById('status');
+            
+            output.innerHTML = `C:\\COWSAY> cls
+
+C:\\COWSAY> <span class="cursor">_</span>`;
+            status.textContent = 'Terminal limpo';
+        }
+
+        function copyToClipboard() {
+            const output = document.getElementById('output');
+            const text = output.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const status = document.getElementById('status');
+                status.textContent = 'Copiado para a área de transferência!';
+                
+                setTimeout(() => {
+                    status.textContent = 'Pronto';
+                }, 2000);
+            });
+        }
+
+        // Easter egg: Konami code
+        let konamiCode = [];
+        const konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]; // ↑↑↓↓←→←→BA
+
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.keyCode);
+            if (konamiCode.length > konami.length) {
+                konamiCode.shift();
+            }
+            
+            if (konamiCode.length === konami.length && 
+                konamiCode.every((key, index) => key === konami[index])) {
+                
+                const message = document.getElementById('message');
+                message.value = "🎮 Código Konami ativado! Você desbloqueou o modo nostálgico! 🎮";
+                generateCowsay();
+                konamiCode = [];
+            }
+        });
+
+        // Auto-generate on page load
+        window.onload = () => {
+            generateCowsay();
+        };
+    </script>
+</body>
+</html>
